@@ -18,8 +18,8 @@ A simple web application built with Flask to track tasks associated with differe
 ### 1. Clone the Repository:
 
 ```bash
-git clone https://github.com/your-username/progress-tracker.git
-cd progress-tracker
+git clone https://github.com/your-username/progress_tracker.git
+cd progress_tracker
 ```
 
 ### 2. Set up a Virtual Environment:
@@ -40,6 +40,7 @@ pip install -r requirements.txt
 Run the Flask app once to create the database:
 
 ```bash
+export FLASK_APP=server.py 
 flask run
 ```
 
@@ -52,6 +53,7 @@ This will automatically initialize the database (`tasks.db`) with the necessary 
    Run the Flask application using the following command:
 
    ```bash
+   export FLASK_APP=server.py 
    flask run
    ```
 
@@ -69,7 +71,8 @@ This will automatically initialize the database (`tasks.db`) with the necessary 
 
 ```
 progress-tracker/
-├── app.py                # Main Flask application
+├── server.py             # Main Flask application
+├── database.py           # Database setup
 ├── templates/
 │   ├── base.html         # Base HTML template
 │   ├── index.html        # Index page for month overview
@@ -105,7 +108,7 @@ Flask-SQLAlchemy
 
 The following features are planned for future development:
 
-1. User Authentication
+1. **User Authentication**
 
 - **Sign Up**: Allow users to create an account with email and password.  
 - **Login**: Add a login page where users can authenticate with credentials.  
@@ -113,13 +116,13 @@ The following features are planned for future development:
 - **Session Management**: Implement session management to keep track of the logged-in user's state.  
 - **Password Recovery**: Implement password reset functionality for users who forget their passwords.  
 
-2. User Services
+2. **User Services**
 
 - **User-Specific Data**: Implement functionality so that each user can view and manage their own tasks and months.  
 - **Admin Access**: Provide admin privileges to manage all users' tasks and data.  
 - **User profiles**: Create a profile page where users can view and update their information.  
 
-3. Additional Features
+3. **Additional Features**
 
 - **Task Categories**: Allow tasks to be categorized (Work, Personal, School) for better organization.
 - **Task Priority**: Implement a priority system to mark tasks as High, Medium, or Low.  
