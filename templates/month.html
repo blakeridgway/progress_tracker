@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ month_name }}</h2>
+
+<ul>
+    {% for task in tasks %}
+    <li>
+        {{ task.description }} - {{ task.status }}
+        <form action="{{ url_for('update_task', name=month_name, task_id=task.id) }}" method="POST">
+            <select name="status">
+                <option value="Not Started" {% if task.status == "Not Started" %}selected{% endif %}>Not Started</option>
+                <option value="In Progress" {% if task.status == "In Progress" %}selected{% endif %}>In Progress</option>
+                <option value="Done" {% if task.status == "Done" %}selected{% endif %}>Done</option>
+                <option value="Stuck" {% if task.status == "Stuck" %}selected{% endif %}>Stuck</option>
+            </select>
+            <button type="submit">Update</button>
+        </form>
+        <form action="{{ url_for('delete_task', name=month_name, task_id=task.id) }}" method="POST" style="display:inline;">
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+
+<form action="{{ url_for('month', name=month_name) }}" method="POST">
+    <input type="text" name="description" placeholder="New Task">
+    <button type="submit">Add Task</button>
+</form>
+
+{% endblock %}  

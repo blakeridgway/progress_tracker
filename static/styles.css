@@ -1,0 +1,81 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    padding: 20px;
+}
+
+footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 20px 0;
+    background-color: #f1f1f1;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin: 10px 0;
+}
+
+form {
+    margin-top: 10px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    border-bottom: 2px solid #ddd;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: white;
+}
+
+header nav a {
+    text-decoration: none;
+    color: white;
+    background-color: #007bff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+header nav a:hover {
+    background-color: #0056b3;
+}
+
+.no-deco {
+    text-decoration: none;
+    color: inherit; /* Keeps the original text color */
+}
+
+.no-deco:visited {
+    color: inherit; /* Keeps the color after the link has been clicked */
+}
+
+.no-deco:active {
+    color: inherit; /* Keeps the color when the link is active */
+}
+
+.no-deco:hover {
+    color: inherit; /* Keeps the color when the link is hovered */
+}

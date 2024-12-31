@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Monthly Progress</h2>
+<ul>
+    {% for month in months %}
+        <li>
+            <a href="{{ url_for('month', name=month[0]) }}">{{ month[0] }}</a>
+            <form action="{{ url_for('delete_month_route', month=month[0]) }}" method="POST" style="display:inline;">
+                <button type="submit">Delete Month</button>
+            </form>
+        </li>
+    {% endfor %}
+</ul>
+
+<form action="{{ url_for('redirect_to_month') }}" method="POST">
+    <input type="text" name="name" placeholder="Month Name" required>
+    <button type="submit">Add Task</button>
+</form>
+
+{% endblock %}
