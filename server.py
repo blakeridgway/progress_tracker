@@ -1,5 +1,6 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash
+import secrets
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from models.task import Task
 from models.month import Month
@@ -35,42 +36,63 @@ def register():
         email = request.form['email']
         username = request.form['username']
         password = request.form['password']
-        if User.query.filter_by(username=username).first():
-            flash('Username already exists!')
+        
+        print(f"Attempting to register user: email={email}, username={username}")
+        
+        existing_user = User.query.filter((User.email == email) | (User.username == username)).first()
+        if existing_user:
+            print("Error: User already exists.")
+            flash('Email or username already exists. Please choose another one.', 'danger')
             return redirect(url_for('register'))
-
-        new_user = User(email=email, username=username)        
-        new_user.set_password(password)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('Registration successful! Please log in.')
-        return redirect(url_for('login'))
-
+        
+        user = User(email=email, username=username)
+        user.set_password(password)
+        
+        try:
+            db.session.add(user)
+            db.session.commit()
+            print(f"User {username} registered successfully!")
+            
+            flash('Your account has been created successfully! You can now log in.', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error during registration: {str(e)}")
+            flash(f'Error creating account: {str(e)}', 'danger')
+            return redirect(url_for('register'))
+    
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        identifier = request.form['username_or_email']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-
+        
+        user = User.query.filter((User.email == identifier) | (User.username == identifier)).first()
+        
         if user and user.check_password(password):
+            random_cookie = secrets.token_hex(16)
+            session['user_cookie'] = random_cookie
+            
             login_user(user)
-            flash('Logged in successfully!')
+            
+            flash("Logged in successfully!")
             return redirect(url_for('index'))
-        else:
-            flash('Invalid username or password.')
-            return redirect(url_for('login'))
-
+        
+        flash("Invalid email/username or password.")
+        return redirect(url_for('login'))
+    
     return render_template('login.html')
 
 @app.route('/logout')
-@login_required
 def logout():
+    session.pop('user_cookie', None)
+
     logout_user()
-    flash('Logged out successfully!')
-    return redirect(url_for('login'))
+
+    flash("You have been logged out.", 'success')
+    return redirect(url_for('index'))
 
 @app.route("/month/", methods=["POST"])
 def redirect_to_month():

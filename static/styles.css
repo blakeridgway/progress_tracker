@@ -65,19 +65,19 @@ header nav a:hover {
 
 .no-deco {
     text-decoration: none;
-    color: inherit; /* Keeps the original text color */
+    color: inherit;
 }
 
 .no-deco:visited {
-    color: inherit; /* Keeps the color after the link has been clicked */
+    color: inherit;
 }
 
 .no-deco:active {
-    color: inherit; /* Keeps the color when the link is active */
+    color: inherit;
 }
 
 .no-deco:hover {
-    color: inherit; /* Keeps the color when the link is hovered */
+    color: inherit;
 }
 
 .add-task-form {
@@ -218,7 +218,6 @@ header nav a:hover {
     background-color: #e53935;
 }
 
-/* Container for the login form */
 .login-container {
     display: flex;
     flex-direction: column;
@@ -233,14 +232,27 @@ header nav a:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Form title */
+.logout-btn,
+.login-btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    background-color: #007bff;
+    font-weight: bold;
+}
+
+.logout-btn:hover,
+.login-btn:hover {
+    background-color: #0056b3;
+}
+
 .form-title {
     font-size: 2rem;
     margin-bottom: 20px;
     color: #333;
 }
 
-/* Form styling */
 .login-form {
     display: flex;
     flex-direction: column;
@@ -268,7 +280,6 @@ header nav a:hover {
     background-color: #45a049;
 }
 
-/* Register link styling */
 .register-link {
     margin-top: 15px;
     font-size: 0.9rem;
