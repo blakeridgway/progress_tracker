@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+    {% if not current_user.is_authenticated %}
+    <div class="notice-message">
+        <strong>Notice:</strong> You must be logged in to use the Progress Tracker app.
+    </div>
+    {% else %}
     <h2 class="page-title">Months</h2>
 
     <div class="add-month-form">
@@ -25,4 +30,5 @@
             </div>
         {% endfor %}
     </div>
+    {% endif %}
 {% endblock %}

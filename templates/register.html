@@ -3,7 +3,7 @@
 {% block content %}
     <div class="login-container">
         <h2 class="form-title">Signup</h2>
-        <form action="{{ url_for('register') }}" method="POST" class="login-form">
+        <form action="{{ url_for('register_user') }}" method="POST" class="login-form">
             <input type="email" name="email" placeholder="Email Address" class="input-field" required>
             <input type="text" name="username" placeholder="Username" class="input-field" required>
             <input type="password" name="password" placeholder="Password" class="input-field" required>

@@ -1,4 +1,4 @@
-from database import db
+from services.database import db
 from flask_login import UserMixin
 
 class User(UserMixin, db.Model):
@@ -7,7 +7,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(250), unique=True, nullable=False)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
-
+    tasks = db.relationship('Task', backref='owner', lazy=True)
+    
     def set_password(self, password):
         from flask_bcrypt import Bcrypt
         bcrypt = Bcrypt()

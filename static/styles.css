@@ -80,6 +80,16 @@ header nav a:hover {
     color: inherit;
 }
 
+.notice-message {
+    background-color: #c70c0c;
+    color: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    text-align: center;
+}
+
 .add-task-form {
     text-align: center;
     margin-bottom: 30px;

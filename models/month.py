@@ -1,5 +1,5 @@
 from sqlalchemy.orm import relationship
-from database import db
+from services.database import db
 
 class Month(db.Model):
     __tablename__ = 'months'
