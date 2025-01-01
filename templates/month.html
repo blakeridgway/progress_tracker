@@ -11,7 +11,6 @@
     </div>
 
     <div class="kanban-container">
-        <!-- Not Started Column -->
         <div class="kanban-column" id="not-started">
             <h3>Not Started</h3>
             <div class="kanban-cards">
@@ -35,7 +34,6 @@
             </div>
         </div>
 
-        <!-- In Progress Column -->
         <div class="kanban-column" id="in-progress">
             <h3>In Progress</h3>
             <div class="kanban-cards">
@@ -59,7 +57,6 @@
             </div>
         </div>
 
-        <!-- Completed Column -->
         <div class="kanban-column" id="Done">
             <h3>Done</h3>
             <div class="kanban-cards">
@@ -97,7 +94,7 @@
                 const draggedCardId = event.dataTransfer.getData('text');
                 const card = document.querySelector(`.kanban-card[data-id="${draggedCardId}"]`);
                 column.querySelector('.kanban-cards').appendChild(card);
-                updateTaskStatus(card, column.id);  // Update task status on drop
+                updateTaskStatus(card, column.id);
             });
         });
     
@@ -111,7 +108,6 @@
             } else if (columnId === 'Done') {
                 newStatus = 'Done';
             }
-            // Submit an AJAX request or a form to update the task status
             fetch(`/update_task_status/${taskId}/${newStatus}`, {
                 method: 'POST',
             });
