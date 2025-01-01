@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for
+import os
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from models.task import Task
 from models.month import Month
@@ -6,7 +7,7 @@ from models.user import User
 from database import db
 
 app = Flask(__name__)
-
+app.secret_key = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -18,7 +19,7 @@ login_manager.login_view = "login"
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
 
 with app.app_context():
     db.create_all()
@@ -38,7 +39,7 @@ def register():
             flash('Username already exists!')
             return redirect(url_for('register'))
 
-        new_user = User(username=username)
+        new_user = User(email=email, username=username)        
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
@@ -50,7 +51,6 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
         username = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
@@ -125,6 +125,14 @@ def update_task(name, task_id):
         task.status = request.form['status']
         db.session.commit()
     return redirect(url_for('month', name=name))
+
+@app.route("/update_task_status/<task_id>/<new_status>", methods=["POST"])
+def update_task_status(task_id, new_status):
+    task = Task.query.get(task_id)
+    if task:
+        task.status = new_status
+        db.session.commit()
+    return '', 200
 
 @app.route("/delete_task/<name>/<task_id>", methods=["POST"])
 def delete_task(name, task_id):

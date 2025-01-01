@@ -1,31 +1,127 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{{ month_name }}</h2>
+    <h2 class="page-title">Kanban Board for {{ month_name }}</h2>
 
-<ul>
-    {% for task in tasks %}
-    <li>
-        {{ task.description }} - {{ task.status }}
-        <form action="{{ url_for('update_task', name=month_name, task_id=task.id) }}" method="POST">
-            <select name="status">
-                <option value="Not Started" {% if task.status == "Not Started" %}selected{% endif %}>Not Started</option>
-                <option value="In Progress" {% if task.status == "In Progress" %}selected{% endif %}>In Progress</option>
-                <option value="Done" {% if task.status == "Done" %}selected{% endif %}>Done</option>
-                <option value="Stuck" {% if task.status == "Stuck" %}selected{% endif %}>Stuck</option>
-            </select>
-            <button type="submit">Update</button>
+    <div class="add-task-form">
+        <form action="{{ url_for('month', name=month_name) }}" method="POST">
+            <input type="text" name="description" placeholder="New Task" required class="task-input-field">
+            <button type="submit" class="submit-btn">Add Task</button>
         </form>
-        <form action="{{ url_for('delete_task', name=month_name, task_id=task.id) }}" method="POST" style="display:inline;">
-            <button type="submit">Delete</button>
-        </form>
-    </li>
-    {% endfor %}
-</ul>
+    </div>
 
-<form action="{{ url_for('month', name=month_name) }}" method="POST">
-    <input type="text" name="description" placeholder="New Task">
-    <button type="submit">Add Task</button>
-</form>
+    <div class="kanban-container">
+        <!-- Not Started Column -->
+        <div class="kanban-column" id="not-started">
+            <h3>Not Started</h3>
+            <div class="kanban-cards">
+                {% for task in tasks %}
+                    {% if task.status == 'Not Started' %}
+                        <div class="kanban-card" data-id="{{ task.id }}">
+                            <p>{{ task.description }}</p>
+                            <form action="{{ url_for('update_task', name=month_name, task_id=task.id) }}" method="POST">
+                                <select name="status" onchange="this.form.submit()">
+                                    <option value="Not Started" {% if task.status == 'Not Started' %}selected{% endif %}>Not Started</option>
+                                    <option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                    <option value="Done" {% if task.status == 'Done' %}selected{% endif %}>Done</option>
+                                </select>
+                            </form>
+                            <form action="{{ url_for('delete_task', name=month_name, task_id=task.id) }}" method="POST">
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
 
-{% endblock %}  
+        <!-- In Progress Column -->
+        <div class="kanban-column" id="in-progress">
+            <h3>In Progress</h3>
+            <div class="kanban-cards">
+                {% for task in tasks %}
+                    {% if task.status == 'In Progress' %}
+                        <div class="kanban-card" data-id="{{ task.id }}">
+                            <p>{{ task.description }}</p>
+                            <form action="{{ url_for('update_task', name=month_name, task_id=task.id) }}" method="POST">
+                                <select name="status" onchange="this.form.submit()">
+                                    <option value="Not Started" {% if task.status == 'Not Started' %}selected{% endif %}>Not Started</option>
+                                    <option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                    <option value="Done" {% if task.status == 'Done' %}selected{% endif %}>Done</option>
+                                </select>
+                            </form>
+                            <form action="{{ url_for('delete_task', name=month_name, task_id=task.id) }}" method="POST">
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Completed Column -->
+        <div class="kanban-column" id="Done">
+            <h3>Done</h3>
+            <div class="kanban-cards">
+                {% for task in tasks %}
+                    {% if task.status == 'Done' %}
+                        <div class="kanban-card" data-id="{{ task.id }}">
+                            <p>{{ task.description }}</p>
+                            <form action="{{ url_for('update_task', name=month_name, task_id=task.id) }}" method="POST">
+                                <select name="status" onchange="this.form.submit()">
+                                    <option value="Not Started" {% if task.status == 'Not Started' %}selected{% endif %}>Not Started</option>
+                                    <option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                    <option value="Done" {% if task.status == 'Done' %}selected{% endif %}>Done</option>
+                                </select>
+                            </form>
+                            <form action="{{ url_for('delete_task', name=month_name, task_id=task.id) }}" method="POST">
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const kanbanColumns = document.querySelectorAll('.kanban-column');
+    
+        kanbanColumns.forEach(column => {
+            column.addEventListener('dragover', (event) => {
+                event.preventDefault();
+            });
+    
+            column.addEventListener('drop', (event) => {
+                event.preventDefault();
+                const draggedCardId = event.dataTransfer.getData('text');
+                const card = document.querySelector(`.kanban-card[data-id="${draggedCardId}"]`);
+                column.querySelector('.kanban-cards').appendChild(card);
+                updateTaskStatus(card, column.id);  // Update task status on drop
+            });
+        });
+    
+        function updateTaskStatus(card, columnId) {
+            const taskId = card.getAttribute('data-id');
+            let newStatus = '';
+            if (columnId === 'not-started') {
+                newStatus = 'Not Started';
+            } else if (columnId === 'in-progress') {
+                newStatus = 'In Progress';
+            } else if (columnId === 'Done') {
+                newStatus = 'Done';
+            }
+            // Submit an AJAX request or a form to update the task status
+            fetch(`/update_task_status/${taskId}/${newStatus}`, {
+                method: 'POST',
+            });
+        }
+    
+        document.querySelectorAll('.kanban-card').forEach(card => {
+            card.setAttribute('draggable', true);
+            card.addEventListener('dragstart', (event) => {
+                event.dataTransfer.setData('text', card.getAttribute('data-id'));
+            });
+        });
+    </script>    
+{% endblock %}
