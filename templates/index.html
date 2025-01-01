@@ -1,21 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Monthly Progress</h2>
-<ul>
-    {% for month in months %}
-        <li>
-            <a href="{{ url_for('month', name=month.name) }}">{{ month.name }}</a>
-            
-            <form action="{{ url_for('delete_month_route', month=month.name) }}" method="POST" style="display:inline;">
-                <button type="submit">Delete Month</button>
-            </form>
-        </li>
-    {% endfor %}
-</ul>
+    <h2 class="page-title">Months</h2>
 
-<form action="{{ url_for('add_month') }}" method="POST">
-    <input type="text" name="name" placeholder="Month Name" required>
-    <button type="submit">Add Month</button>
-</form>
+    <div class="add-month-form">
+        <form action="{{ url_for('add_month') }}" method="POST">
+            <input type="text" name="name" placeholder="Month Name" required class="month-input-field">
+            <button type="submit" class="submit-btn">Add Month</button>
+        </form>
+    </div>
+
+    <div class="months-list">
+        {% for month in months %}
+            <div class="month-item">
+                <a href="{{ url_for('month', name=month.name) }}" class="month-link">{{ month.name }}</a>
+                
+                <form action="{{ url_for('month', name=month.name) }}" method="GET">
+                    <button type="submit" class="submit-btn">View</button>
+                </form>
+
+                <form action="{{ url_for('delete_month_route', month=month.name) }}" method="POST" class="delete-form">
+                    <button type="submit" class="delete-btn">Delete</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
